@@ -1,0 +1,40 @@
+{
+  "name": "redux-entitiy-crud",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jshthornton/redux-entitiy-crud.git"
+  },
+  "author": "Joshua Thornton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jshthornton/redux-entitiy-crud/issues"
+  },
+  "homepage": "https://github.com/jshthornton/redux-entitiy-crud#readme",
+  "peerDependencies": {
+    "react": "^15.0.0",
+    "redux": "^3.3.1",
+    "redux-saga": "^0.9.5"
+  },
+  "dependencies": {
+    "lodash": "^4.7.0",
+    "complication": "0.0.0",
+    "normalizr": "^2.0.1",
+    "query-string": "^4.1.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.1.21",
+    "babel-loader": "^6.1.0",
+    "babel-preset-es2015": "^6.1.18",
+    "grunt": "^0.4.5",
+    "grunt-babel": "^6.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "load-grunt-tasks": "^3.3.0",
+    "babel-preset-react": "^6.5.0"
+  }
+}
