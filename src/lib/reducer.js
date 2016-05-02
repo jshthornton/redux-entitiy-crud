@@ -1,40 +1,52 @@
 import _ from 'lodash';
 
-export const create = (state, action, path, idKey = 'id') => {
+export const create = (state, action, idKey = 'id') => {
   if(action.error === true) {
     return state;
   }
 
-  return state.merge(Immutable.fromJS(_.get(action, path)));
+  if(_.isArray(action.payload) === true) {
+    return _.assign({}, state, _.keyBy(action.payload, idKey));
+  }
+
+  return _.assign({}, state, { [action.payload.id]: action.payload });
 };
 
-export const read = (state, action, path, idKey = 'id') => {
+export const read = (state, action, idKey = 'id') => {
   if(action.error === true) {
     return state;
   }
 
-  return state.merge(Immutable.fromJS(_.get(action, path)));
+  if(_.isArray(action.payload) === true) {
+    return _.assign({}, state, _.keyBy(action.payload, idKey));
+  }
+
+  return _.assign({}, state, { [action.payload.id]: action.payload });
 };
 
-export const update = (state, action, path, idKey = 'id') => {
+export const update = (state, action, idKey = 'id') => {
   if(action.error === true) {
     return state;
   }
 
-  return state.merge(Immutable.fromJS(_.get(action, path)));
+  if(_.isArray(action.payload) === true) {
+    return _.merge({}, state, _.keyBy(action.payload, idKey));
+  }
+
+  return _.merge({}, state, { [action.payload.id]: action.payload });
 };
 
-export const del = (state, action, path, idKey = 'id') => {
+export const del = (state, action, idKey = 'id') => {
   if(action.error === true) {
     return state;
   }
 
-  return state.filterNot(entity => {
-    const id = entity.get(idKey);
-    return _.includes(_.get(action, path), id);
-  });
-};
+  if(_.isArray(action.payload) === true) {
+    return _.omit(_.clone(state), _.map(action.payload, idKey));
+  }
 
+  return _.omit(_.clone(state), action.payload.id);
+};
 
 const reducer = (reducer, config) => {
   if(!_.isArray(config.create)) {
