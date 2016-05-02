@@ -2,7 +2,7 @@ import { takeEvery, takeLatest } from 'redux-saga';
 import { call, put, take, fork, select } from 'redux-saga/effects';
 
 // Errors / Exceptions
-import { NotFoundHttpError, BadRequestHttpError } from 'complication/lib/http';
+import { HttpError, NotFoundHttpError, BadRequestHttpError } from 'complication/lib/http';
 
 export function* fetchEntity(config, options) {
   yield put(config.entityActions.fetchRequest(options.url || options.id));
