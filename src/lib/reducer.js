@@ -1,51 +1,51 @@
 import _ from 'lodash';
 
-export const create = (state, action, idKey = 'id') => {
+export const create = (state, action, path, idKey = 'id') => {
   if(action.error === true) {
     return state;
   }
 
-  if(_.isArray(action.payload) === true) {
-    return _.assign({}, state, _.keyBy(action.payload, idKey));
+  if(_.isArray(_.get(action, path)) === true) {
+    return _.assign({}, state, _.keyBy(_.get(action, path), idKey));
   }
 
-  return _.assign({}, state, { [action.payload.id]: action.payload });
+  return _.assign({}, state, { [_.get(action, path).id]: _.get(action, path) });
 };
 
-export const read = (state, action, idKey = 'id') => {
+export const read = (state, action, path, idKey = 'id') => {
   if(action.error === true) {
     return state;
   }
 
-  if(_.isArray(action.payload) === true) {
-    return _.assign({}, state, _.keyBy(action.payload, idKey));
+  if(_.isArray(_.get(action, path)) === true) {
+    return _.assign({}, state, _.keyBy(_.get(action, path), idKey));
   }
 
-  return _.assign({}, state, { [action.payload.id]: action.payload });
+  return _.assign({}, state, { [_.get(action, path).id]: _.get(action, path) });
 };
 
-export const update = (state, action, idKey = 'id') => {
+export const update = (state, action, path, idKey = 'id') => {
   if(action.error === true) {
     return state;
   }
 
-  if(_.isArray(action.payload) === true) {
-    return _.merge({}, state, _.keyBy(action.payload, idKey));
+  if(_.isArray(_.get(action, path)) === true) {
+    return _.merge({}, state, _.keyBy(_.get(action, path), idKey));
   }
 
-  return _.merge({}, state, { [action.payload.id]: action.payload });
+  return _.merge({}, state, { [_.get(action, path).id]: _.get(action, path) });
 };
 
-export const del = (state, action, idKey = 'id') => {
+export const del = (state, action, path, idKey = 'id') => {
   if(action.error === true) {
     return state;
   }
 
-  if(_.isArray(action.payload) === true) {
-    return _.omit(_.clone(state), _.map(action.payload, idKey));
+  if(_.isArray(_.get(action, path)) === true) {
+    return _.omit(_.clone(state), _.map(_.get(action, path), idKey));
   }
 
-  return _.omit(_.clone(state), action.payload.id);
+  return _.omit(_.clone(state), _.get(action, path).id);
 };
 
 const reducer = (reducer, config) => {
