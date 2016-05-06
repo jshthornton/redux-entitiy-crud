@@ -4,7 +4,7 @@ import { generateActions as generateAsyncActions } from './async';
 
 export const generateActions = (name, operations) => {
   if(operations == null) {
-    operations = ['create', 'fetch', 'update', 'delete'];
+    operations = ['create', 'fetch', 'update', 'delete', 'count'];
   }
 
   return _.reduce(operations, (result, operation) => {

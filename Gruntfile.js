@@ -14,7 +14,7 @@ module.exports = function(grunt) {
           //{
             expand: true,
             cwd: 'src',
-            src: ['src/**/*.js', '!**/__tests__/**/*'],
+            src: ['**/*.js', '!**/__tests__/**'],
             dest: './'
           //}
         //]
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         options: {
           atBegin: true
         },
-        files: ['src/**/*.js', '!**/__tests__/**/*'],
+        files: ['src/**/*.js', '!**/__tests__/**'],
         tasks: ['babel:dist']
       }
     }
