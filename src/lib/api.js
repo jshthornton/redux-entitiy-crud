@@ -1,4 +1,4 @@
-import queryString from 'query-string';
+import qs from 'qs';
 import _ from 'lodash';
 
 export function removeTrailingSlash(url) {
@@ -12,7 +12,7 @@ export function normalizeParams(params) {
   if(_.isString(params)) {
     return '?' + params;
   } else if(_.isObject(params)) {
-    return '?' + queryString.stringify(params);
+    return '?' + stringify.stringify(params, { arrayFormat: 'brackets' });
   } else {
     return '';
   }
