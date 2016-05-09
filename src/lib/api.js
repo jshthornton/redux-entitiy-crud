@@ -12,7 +12,7 @@ export function normalizeParams(params) {
   if(_.isString(params)) {
     return '?' + params;
   } else if(_.isObject(params)) {
-    return '?' + stringify.stringify(params, { arrayFormat: 'brackets' });
+    return '?' + qs.stringify(params, { arrayFormat: 'brackets' });
   } else {
     return '';
   }
