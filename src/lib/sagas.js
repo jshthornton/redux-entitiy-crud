@@ -16,7 +16,7 @@ export function* fetchEntity(config, options) {
   try {
     const { json, response } = yield call(config.apiFn, options.url || options.id, options.params);
 
-    statusChecker(status);
+    statusChecker(response.status);
 
     yield put(config.entityActions.fetchSuccess(config.parser(json, options.parserOptions)));
   } catch(err) {
@@ -30,7 +30,7 @@ export function* createEntity(config, options) {
   try {
     const { json, response } = yield call(config.apiFn, options.data, options.params);
 
-    statusChecker(status);
+    statusChecker(response.status);
 
     yield put(config.entityActions.createSuccess(config.parser(json, options.parserOptions)));
   } catch(err) {
@@ -44,7 +44,7 @@ export function* updateEntity(config, options) {
   try {
     const { json, response } = yield call(config.apiFn, options.url || options.id, options.data, options.params);
 
-    statusChecker(status);
+    statusChecker(response.status);
 
     yield put(config.entityActions.updateSuccess(config.parser(json, options.parserOptions)));
   } catch(err) {
@@ -58,7 +58,7 @@ export function* deleteEntity(config, options) {
   try {
     const { json, response } = yield call(config.apiFn, options.url || options.id, options.params);
 
-    statusChecker(status);
+    statusChecker(response.status);
 
     yield put(config.entityActions.deleteSuccess(config.parser(json, options.parserOptions)));
   } catch(err) {
@@ -72,7 +72,7 @@ export function* countEntity(config, options) {
   try {
     const { json, response } = yield call(config.apiFn, options.params, options.url);
 
-    statusChecker(status);
+    statusChecker(response.status);
 
     yield put(config.entityActions.countSuccess(config.parser(json, options.parserOptions)));
   } catch(err) {
