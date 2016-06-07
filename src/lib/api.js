@@ -91,7 +91,7 @@ export const serializeFormDataBody = function(data) {
   let formData = new FormData();
 
   _.forOwn(data, (value, key) => {
-    formData.set(key, value)
+    formData.append(key, value)
   });
 
   return formData;
