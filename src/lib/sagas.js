@@ -14,8 +14,8 @@ export function statusChecker(response, config) {
 }
 
 export function apiInvoker(config) {
-  return () => {
-    return config.apiFn({
+  return async function() {
+    return await config.apiFn({
       url: config.url,
       id: config.id,
       params: config.params,
@@ -42,12 +42,12 @@ export function* apiWrapper(config) {
 
   try {
     const apiFn = yield call(config.apiInvoker, config);
-    const { response } = yield call(apiFn);
+    const response = yield call(apiFn);
     const body = yield call(config.bodyParser, response);
 
     yield call(config.responseChecker, response, config);
 
-    const parsedBody = yield call(config.parser(body, config.parserOptions));
+    const parsedBody = yield call(config.parser, body, config.parserOptions);
 
     yield put(config.actions.success(parsedBody));
   } catch(err) {
