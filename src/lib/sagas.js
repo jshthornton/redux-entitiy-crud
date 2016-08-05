@@ -1,81 +1,64 @@
 import { takeEvery, takeLatest } from 'redux-saga';
 import { call, put, take, fork, select } from 'redux-saga/effects';
+import _ from 'lodash';
 
 // Errors / Exceptions
 import { HttpError, NotFoundHttpError, BadRequestHttpError } from 'complication/lib/http';
 
-export function statusChecker(status, entityName) {
+export function statusChecker(response, config.entityName) {
+  const status = response.status;
+
   if(status >= 400) {
-    throw new HttpError(status, entityName);
+    throw new HttpError(status, config.entityName);
   }
 }
 
-export function* fetchEntity(config, options) {
-  yield put(config.entityActions.fetchRequest(options.url || options.id));
+export function apiInvoker(config) {
+  return () => {
+    return config.apiFn({
+      url: config.url,
+      id: config.id,
+      params: config.params,
+      data: config.data
+    });
+  };
+}
+
+export async function parseJSON(response) {
+  return response.json();
+}
+
+export function* apiWrapper(config) {
+  config = _.assign({}, {
+    apiInvoker: apiInvoker,
+    bodyParser: parseJSON,
+    responseChecker: statusChecker
+  }, config);
+
+  yield put(config.actions.request({
+    url: config.url,
+    id: config.id
+  }));
 
   try {
-    const { json, response } = yield call(config.apiFn, options.url || options.id, options.params);
+    const apiFn = yield call(config.apiInvoker, config);
+    const { response } = yield call(apiFn);
+    const body = yield call(config.bodyParser, response);
 
-    statusChecker(response.status, options.entityName);
+    yield call(config.responseChecker, response, config);
 
-    yield put(config.entityActions.fetchSuccess(config.parser(json, options.parserOptions)));
+    const parsedBody = yield call(config.parser(body, config.parserOptions));
+
+    yield put(config.actions.success(parsedBody));
   } catch(err) {
-    yield put(config.entityActions.fetchFailure(err));
+    yield put(config.actions.failure(err));
   }
-};
+}
 
-export function* createEntity(config, options) {
-  yield put(config.entityActions.createRequest(options.url || options.id));
+export function runtimeApiWrapper(config) {
+  return (overideConfig) => {
+    const mergedConfig = _.assign({}, config, overideConfig);
 
-  try {
-    const { json, response } = yield call(config.apiFn, options.data, options.params);
-
-    statusChecker(response.status, options.entityName);
-
-    yield put(config.entityActions.createSuccess(config.parser(json, options.parserOptions)));
-  } catch(err) {
-    yield put(config.entityActions.createFailure(err));
-  }
-};
-
-export function* updateEntity(config, options) {
-  yield put(config.entityActions.updateRequest(options.url || options.id));
-
-  try {
-    const { json, response } = yield call(config.apiFn, options.url || options.id, options.data, options.params);
-
-    statusChecker(response.status, options.entityName);
-
-    yield put(config.entityActions.updateSuccess(config.parser(json, options.parserOptions)));
-  } catch(err) {
-    yield put(config.entityActions.updateFailure(err));
-  }
-};
-
-export function* deleteEntity(config, options) {
-  yield put(config.entityActions.deleteRequest(options.url || options.id));
-
-  try {
-    const { json, response } = yield call(config.apiFn, options.url || options.id, options.params);
-
-    statusChecker(response.status, options.entityName);
-
-    yield put(config.entityActions.deleteSuccess(config.parser(json, options.parserOptions)));
-  } catch(err) {
-    yield put(config.entityActions.deleteFailure(err));
-  }
-};
-
-export function* countEntity(config, options) {
-  yield put(config.entityActions.countRequest());
-
-  try {
-    const { json, response } = yield call(config.apiFn, options.params, options.url);
-
-    statusChecker(response.status, options.entityName);
-
-    yield put(config.entityActions.countSuccess(config.parser(json, options.parserOptions)));
-  } catch(err) {
-    yield put(config.entityActions.countFailure(err));
-  }
-};
+    return apiWrapper(mergedConfig);
+  };
+}
