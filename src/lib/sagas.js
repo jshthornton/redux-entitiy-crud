@@ -5,7 +5,7 @@ import _ from 'lodash';
 // Errors / Exceptions
 import { HttpError, NotFoundHttpError, BadRequestHttpError } from 'complication/lib/http';
 
-export function statusChecker(response, config.entityName) {
+export function statusChecker(response, config) {
   const status = response.status;
 
   if(status >= 400) {
