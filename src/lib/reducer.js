@@ -29,7 +29,7 @@ export const del = (state, action, path, idKey = 'id') => {
     return state;
   }
 
-  return _.omit(_.clone(state), _.get(action, path).id);
+  return _.omit(_.clone(state), _.get(action, path)[idKey]);
 };
 
 const reducer = (reducer, config) => {
